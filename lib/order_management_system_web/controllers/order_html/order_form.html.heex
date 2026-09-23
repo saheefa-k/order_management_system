@@ -1,0 +1,13 @@
+<.form :let={f} for={@changeset} action={@action}>
+  <.input field={f[:items]} type="textarea" label="Items" />
+  <.input field={@form[:status]} type="select" label="Status"
+  options={[
+    {"Pending", "pending"},
+    {"Completed", "completed"},
+    {"Cancelled", "cancelled"}
+  ]}/>
+  <footer>
+    <.button variant="primary">Save Order</.button>
+    <.button :if={@return_to} href={@return_to}>Cancel</.button>
+  </footer>
+</.form>
