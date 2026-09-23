@@ -140,8 +140,10 @@ defmodule OrderManagementSystem.Orders do
 
   """
   def change_order(%Scope{} = scope, %Order{} = order, attrs \\ %{}) do
-    true = order.user_id == scope.user.id
-
-    Order.changeset(order, attrs, scope)
+    if order.user_id == nil or order.user_id == scope.user.id do
+      Order.changeset(order, attrs, scope)
+    else
+      raise Ecto.NoResultsError, queryable: Order
+    end
   end
 end

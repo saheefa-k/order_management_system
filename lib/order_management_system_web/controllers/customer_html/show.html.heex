@@ -1,7 +1,6 @@
 <Layouts.app flash={@flash} current_scope={@current_scope}>
   <.header>
     Customer {@customer.id}
-    <:subtitle>This is a customer record from your database.</:subtitle>
     <:actions>
       <.button navigate={~p"/customers"}>
         <.icon name="hero-arrow-left" />

@@ -12,20 +12,12 @@ defmodule OrderManagementSystemWeb.CoreComponents do
   augmented with daisyUI, a Tailwind CSS plugin that provides UI components
   and themes. Here are useful references:
 
-    * [daisyUI](https://daisyui.com/docs/intro/) - a good place to get
-      started and see the available components.
-
-    * [Tailwind CSS](https://tailwindcss.com) - the foundational framework
-      we build on. You will use it for layout, sizing, flexbox, grid, and
-      spacing.
-
-    * [Heroicons](https://heroicons.com) - see `icon/1` for usage.
-
-    * [Phoenix.Component](https://phoenix-live-view.hexdocs.pm/Phoenix.Component.html) -
-      the component system used by Phoenix. Some components, such as `<.link>`
-      and `<.form>`, are defined there.
-
+    * daisyUI - https://daisyui.com/docs/intro/
+    * Tailwind CSS - https://tailwindcss.com
+    * Heroicons - https://heroicons.com
+    * Phoenix.Component - https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html
   """
+
   use Phoenix.Component
   use Gettext, backend: OrderManagementSystemWeb.Gettext
 
@@ -33,18 +25,6 @@ defmodule OrderManagementSystemWeb.CoreComponents do
 
   @doc """
   Renders flash notices.
-
-  ## Examples
-
-      <.flash kind={:info} flash={@flash} />
-      <.flash
-        id="welcome-back"
-        kind={:info}
-        phx-mounted={show("#welcome-back") |> JS.remove_attribute("hidden")}
-        hidden
-      >
-        Welcome Back!
-      </.flash>
   """
   attr :id, :string, doc: "the optional id of flash container"
   attr :flash, :map, default: %{}, doc: "the map of flash messages to display"
@@ -73,12 +53,19 @@ defmodule OrderManagementSystemWeb.CoreComponents do
       ]}>
         <.icon :if={@kind == :info} name="hero-information-circle" class="size-5 shrink-0" />
         <.icon :if={@kind == :error} name="hero-exclamation-circle" class="size-5 shrink-0" />
+
         <div>
           <p :if={@title} class="font-semibold">{@title}</p>
           <p>{msg}</p>
         </div>
+
         <div class="flex-1" />
-        <button type="button" class="group self-start cursor-pointer" aria-label={gettext("close")}>
+
+        <button
+          type="button"
+          class="group self-start cursor-pointer"
+          aria-label={gettext("close")}
+        >
           <.icon name="hero-x-mark" class="size-5 opacity-40 group-hover:opacity-70" />
         </button>
       </div>
@@ -88,12 +75,6 @@ defmodule OrderManagementSystemWeb.CoreComponents do
 
   @doc """
   Renders a button with navigation support.
-
-  ## Examples
-
-      <.button>Send!</.button>
-      <.button phx-click="go" variant="primary">Send!</.button>
-      <.button navigate={~p"/"}>Home</.button>
   """
   attr :rest, :global, include: ~w(href navigate patch method download name value disabled)
   attr :class, :any
@@ -125,44 +106,8 @@ defmodule OrderManagementSystemWeb.CoreComponents do
 
   @doc """
   Renders an input with label and error messages.
-
-  A `Phoenix.HTML.FormField` may be passed as argument,
-  which is used to retrieve the input name, id, and values.
-  Otherwise all attributes may be passed explicitly.
-
-  ## Types
-
-  This function accepts all HTML input types, considering that:
-
-    * You may also set `type="select"` to render a `<select>` tag
-
-    * `type="checkbox"` is used exclusively to render boolean values
-
-    * For live file uploads, see `Phoenix.Component.live_file_input/1`
-
-  See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input
-  for more information. Unsupported types, such as radio, are best
-  written directly in your templates.
-
-  ## Examples
-
-  ```heex
-  <.input field={@form[:email]} type="email" />
-  <.input name="my-input" errors={["oh no!"]} />
-  ```
-
-  ## Select type
-
-  When using `type="select"`, you must pass the `options` and optionally
-  a `value` to mark which option should be preselected.
-
-  ```heex
-  <.input field={@form[:user_type]} type="select" options={["Admin": "admin", "User": "user"]} />
-  ```
-
-  For more information on what kind of data can be passed to `options` see
-  [`options_for_select`](https://phoenix-html.hexdocs.pm/Phoenix.HTML.Form.html#options_for_select/2).
   """
+
   attr :id, :any, default: nil
   attr :name, :any
   attr :label, :string, default: nil
@@ -170,8 +115,26 @@ defmodule OrderManagementSystemWeb.CoreComponents do
 
   attr :type, :string,
     default: "text",
-    values: ~w(checkbox color date datetime-local email file month number password
-               search select tel text textarea time url week hidden)
+    values: ~w(
+      checkbox
+      color
+      date
+      datetime-local
+      email
+      file
+      month
+      number
+      password
+      search
+      select
+      tel
+      text
+      textarea
+      time
+      url
+      week
+      hidden
+    )
 
   attr :field, Phoenix.HTML.FormField,
     doc: "a form field struct retrieved from the form, for example: @form[:email]"
@@ -185,8 +148,27 @@ defmodule OrderManagementSystemWeb.CoreComponents do
   attr :error_class, :any, default: nil, doc: "the input error class to use over defaults"
 
   attr :rest, :global,
-    include: ~w(accept autocomplete capture cols disabled form list max maxlength min minlength
-                multiple pattern placeholder readonly required rows size step)
+    include: ~w(
+      accept
+      autocomplete
+      capture
+      cols
+      disabled
+      form
+      list
+      max
+      maxlength
+      min
+      minlength
+      multiple
+      pattern
+      placeholder
+      readonly
+      required
+      rows
+      size
+      step
+    )
 
   def input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     errors = if Phoenix.Component.used_input?(field), do: field.errors, else: []
@@ -194,7 +176,9 @@ defmodule OrderManagementSystemWeb.CoreComponents do
     assigns
     |> assign(field: nil, id: assigns.id || field.id)
     |> assign(:errors, Enum.map(errors, &translate_error(&1)))
-    |> assign_new(:name, fn -> if assigns.multiple, do: field.name <> "[]", else: field.name end)
+    |> assign_new(:name, fn ->
+      if assigns.multiple, do: field.name <> "[]", else: field.name
+    end)
     |> assign_new(:value, fn -> field.value end)
     |> input()
   end
@@ -221,6 +205,7 @@ defmodule OrderManagementSystemWeb.CoreComponents do
           disabled={@rest[:disabled]}
           form={@rest[:form]}
         />
+
         <span class="label">
           <input
             type="checkbox"
@@ -233,20 +218,32 @@ defmodule OrderManagementSystemWeb.CoreComponents do
           />{@label}
         </span>
       </label>
+
       <.error :for={msg <- @errors}>{msg}</.error>
     </div>
     """
   end
 
+  # SELECT INPUT
   def input(%{type: "select"} = assigns) do
     ~H"""
-    <div class="fieldset mb-2">
-      <label for={@id}>
-        <span :if={@label} class="label mb-1">{@label}</span>
+    <div class="mb-4">
+      <label for={@id} class="block">
+        <span
+          :if={@label}
+          class="mb-1 block text-sm font-medium text-gray-900"
+        >
+          {@label}
+        </span>
+
         <select
           id={@id}
           name={@name}
-          class={[@class || "w-full select", @errors != [] && (@error_class || "select-error")]}
+          class={[
+            @class ||
+              "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-300",
+            @errors != [] && (@error_class || "border-red-500")
+          ]}
           multiple={@multiple}
           {@rest}
         >
@@ -254,58 +251,76 @@ defmodule OrderManagementSystemWeb.CoreComponents do
           {Phoenix.HTML.Form.options_for_select(@options, @value)}
         </select>
       </label>
+
       <.error :for={msg <- @errors}>{msg}</.error>
     </div>
     """
   end
 
+  # TEXTAREA INPUT
   def input(%{type: "textarea"} = assigns) do
     ~H"""
-    <div class="fieldset mb-2">
-      <label for={@id}>
-        <span :if={@label} class="label mb-1">{@label}</span>
+    <div class="mb-4">
+      <label for={@id} class="block">
+        <span
+          :if={@label}
+          class="mb-1 block text-sm font-medium text-gray-900"
+        >
+          {@label}
+        </span>
+
         <textarea
           id={@id}
           name={@name}
           class={[
-            @class || "w-full textarea",
-            @errors != [] && (@error_class || "textarea-error")
+            @class ||
+              "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder:text-gray-500 shadow-sm outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-300",
+            @errors != [] && (@error_class || "border-red-500")
           ]}
           {@rest}
         >{Phoenix.HTML.Form.normalize_value("textarea", @value)}</textarea>
       </label>
+
       <.error :for={msg <- @errors}>{msg}</.error>
     </div>
     """
   end
 
-  # All other inputs text, datetime-local, url, password, etc. are handled here...
+  # ALL OTHER INPUTS
   def input(assigns) do
     ~H"""
-    <div class="fieldset mb-2">
-      <label for={@id}>
-        <span :if={@label} class="label mb-1">{@label}</span>
+    <div class="mb-4">
+      <label for={@id} class="block">
+        <span
+          :if={@label}
+          class="mb-1 block text-sm font-medium text-gray-900"
+        >
+          {@label}
+        </span>
+
         <input
           type={@type}
           name={@name}
           id={@id}
           value={Phoenix.HTML.Form.normalize_value(@type, @value)}
           class={[
-            @class || "w-full input",
-            @errors != [] && (@error_class || "input-error")
+            @class ||
+              "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder:text-gray-500 shadow-sm outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-300",
+            @errors != [] && (@error_class || "border-red-500")
           ]}
           {@rest}
         />
       </label>
+
       <.error :for={msg <- @errors}>{msg}</.error>
     </div>
     """
   end
 
-  # Helper used by inputs to generate form errors
+  # ERROR MESSAGE
   defp error(assigns) do
     ~H"""
-    <p class="mt-1.5 flex gap-2 items-center text-sm text-error">
+    <p class="mt-1.5 flex items-center gap-2 text-sm text-error">
       <.icon name="hero-exclamation-circle" class="size-5" />
       {render_slot(@inner_block)}
     </p>
@@ -326,39 +341,36 @@ defmodule OrderManagementSystemWeb.CoreComponents do
         <h1 class="text-lg font-semibold leading-8">
           {render_slot(@inner_block)}
         </h1>
+
         <p :if={@subtitle != []} class="text-sm text-base-content/70">
           {render_slot(@subtitle)}
         </p>
       </div>
-      <div class="flex-none">{render_slot(@actions)}</div>
+
+      <div class="flex-none">
+        {render_slot(@actions)}
+      </div>
     </header>
     """
   end
 
   @doc """
   Renders a table with generic styling.
-
-  ## Examples
-
-      <.table id="users" rows={@users}>
-        <:col :let={user} label="id">{user.id}</:col>
-        <:col :let={user} label="username">{user.username}</:col>
-      </.table>
   """
+
   attr :id, :string, required: true
   attr :rows, :list, required: true
-  attr :row_id, :any, default: nil, doc: "the function for generating the row id"
-  attr :row_click, :any, default: nil, doc: "the function for handling phx-click on each row"
+  attr :row_id, :any, default: nil
+  attr :row_click, :any, default: nil
 
   attr :row_item, :any,
-    default: &Function.identity/1,
-    doc: "the function for mapping each row before calling the :col and :action slots"
+    default: &Function.identity/1
 
   slot :col, required: true do
     attr :label, :string
   end
 
-  slot :action, doc: "the slot for showing user actions in the last table column"
+  slot :action
 
   def table(assigns) do
     assigns =
@@ -371,12 +383,17 @@ defmodule OrderManagementSystemWeb.CoreComponents do
       <thead>
         <tr>
           <th :for={col <- @col}>{col[:label]}</th>
+
           <th :if={@action != []}>
             <span class="sr-only">{gettext("Actions")}</span>
           </th>
         </tr>
       </thead>
-      <tbody id={@id} phx-update={is_struct(@rows, Phoenix.LiveView.LiveStream) && "stream"}>
+
+      <tbody
+        id={@id}
+        phx-update={is_struct(@rows, Phoenix.LiveView.LiveStream) && "stream"}
+      >
         <tr :for={row <- @rows} id={@row_id && @row_id.(row)}>
           <td
             :for={col <- @col}
@@ -385,6 +402,7 @@ defmodule OrderManagementSystemWeb.CoreComponents do
           >
             {render_slot(col, @row_item.(row))}
           </td>
+
           <td :if={@action != []} class="w-0 font-semibold">
             <div class="flex gap-4">
               <%= for action <- @action do %>
@@ -400,14 +418,8 @@ defmodule OrderManagementSystemWeb.CoreComponents do
 
   @doc """
   Renders a data list.
-
-  ## Examples
-
-      <.list>
-        <:item title="Title">{@post.title}</:item>
-        <:item title="Views">{@post.views}</:item>
-      </.list>
   """
+
   slot :item, required: true do
     attr :title, :string, required: true
   end
@@ -426,23 +438,9 @@ defmodule OrderManagementSystemWeb.CoreComponents do
   end
 
   @doc """
-  Renders a [Heroicon](https://heroicons.com).
-
-  Heroicons come in three styles – outline, solid, and mini.
-  By default, the outline style is used, but solid and mini may
-  be applied by using the `-solid` and `-mini` suffix.
-
-  You can customize the size and colors of the icons by setting
-  width, height, and background color classes.
-
-  Icons are extracted from the `deps/heroicons` directory and bundled within
-  your compiled app.css by the plugin in `assets/vendor/heroicons.js`.
-
-  ## Examples
-
-      <.icon name="hero-x-mark" />
-      <.icon name="hero-arrow-path" class="ml-1 size-3 motion-safe:animate-spin" />
+  Renders a Heroicon.
   """
+
   attr :name, :string, required: true
   attr :class, :any, default: "size-4"
 
@@ -452,7 +450,7 @@ defmodule OrderManagementSystemWeb.CoreComponents do
     """
   end
 
-  ## JS Commands
+  # JS Commands
 
   def show(js \\ %JS{}, selector) do
     JS.show(js,
@@ -461,7 +459,7 @@ defmodule OrderManagementSystemWeb.CoreComponents do
       transition:
         {"transition-all ease-out duration-300",
          "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95",
-         "opacity-100 translate-y-0 sm:scale-100"}
+         "opacity-100 translate-y-0 sm:translate-y-0 sm:scale-100"}
     )
   end
 
@@ -470,7 +468,8 @@ defmodule OrderManagementSystemWeb.CoreComponents do
       to: selector,
       time: 200,
       transition:
-        {"transition-all ease-in duration-200", "opacity-100 translate-y-0 sm:scale-100",
+        {"transition-all ease-in duration-200",
+         "opacity-100 translate-y-0 sm:scale-100",
          "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"}
     )
   end
@@ -479,20 +478,22 @@ defmodule OrderManagementSystemWeb.CoreComponents do
   Translates an error message using gettext.
   """
   def translate_error({msg, opts}) do
-    # When using gettext, we typically pass the strings we want
-    # to translate as a static argument:
-    #
-    #     # Translate the number of files with plural rules
-    #     dngettext("errors", "1 file", "%{count} files", count)
-    #
-    # However the error messages in our forms and APIs are generated
-    # dynamically, so we need to translate them by calling Gettext
-    # with our gettext backend as first argument. Translations are
-    # available in the errors.po file (as we use the "errors" domain).
     if count = opts[:count] do
-      Gettext.dngettext(OrderManagementSystemWeb.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(
+        OrderManagementSystemWeb.Gettext,
+        "errors",
+        msg,
+        msg,
+        count,
+        opts
+      )
     else
-      Gettext.dgettext(OrderManagementSystemWeb.Gettext, "errors", msg, opts)
+      Gettext.dgettext(
+        OrderManagementSystemWeb.Gettext,
+        "errors",
+        msg,
+        opts
+      )
     end
   end
 

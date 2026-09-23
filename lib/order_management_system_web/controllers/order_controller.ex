@@ -3,6 +3,7 @@ defmodule OrderManagementSystemWeb.OrderController do
 
   alias OrderManagementSystem.Orders
   alias OrderManagementSystem.Orders.Order
+  alias OrderManagementSystem.Customers
 
   def index(conn, _params) do
     orders = Orders.list_orders(conn.assigns.current_scope)
@@ -10,12 +11,13 @@ defmodule OrderManagementSystemWeb.OrderController do
   end
 
   def new(conn, _params) do
-    changeset =
-      Orders.change_order(conn.assigns.current_scope, %Order{
-        user_id: conn.assigns.current_scope.user.id
-      })
+    changeset = Orders.change_order(conn.assigns.current_scope, %Order{})
+    customers = Customers.list_customers(conn.assigns.current_scope)
 
-    render(conn, :new, changeset: changeset)
+    render(conn, :new,
+      changeset: changeset,
+      customers: customers
+    )
   end
 
   def create(conn, %{"order" => order_params}) do
@@ -36,9 +38,15 @@ defmodule OrderManagementSystemWeb.OrderController do
   end
 
   def edit(conn, %{"id" => id}) do
-    order = Orders.get_order!(conn.assigns.current_scope, id)
+    order = Orders.get_order!(id, conn.assigns.current_scope)
     changeset = Orders.change_order(conn.assigns.current_scope, order)
-    render(conn, :edit, order: order, changeset: changeset)
+    customers = Customers.list_customers(conn.assigns.current_scope)
+
+    render(conn, :edit,
+      order: order,
+      changeset: changeset,
+      customers: customers
+    )
   end
 
   def update(conn, %{"id" => id, "order" => order_params}) do
