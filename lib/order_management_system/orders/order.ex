@@ -2,17 +2,20 @@ defmodule OrderManagementSystem.Orders.Order do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias OrderManagementSystem.Customers.Customer
+  
   schema "orders" do
     field :items, :string
     field :status, :string
-    field :customer_id, :id
     field :user_id, :id
+
+    belongs_to :customer, Customer
 
     timestamps(type: :utc_datetime)
   end
 
   @doc false
-   def changeset(order, attrs, user_scope) do
+  def changeset(order, attrs, user_scope) do
     order
     |> cast(attrs, [:customer_id, :items, :status])
     |> validate_required([:customer_id, :items, :status])

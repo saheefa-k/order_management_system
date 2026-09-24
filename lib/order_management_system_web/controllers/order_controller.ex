@@ -21,14 +21,21 @@ defmodule OrderManagementSystemWeb.OrderController do
   end
 
   def create(conn, %{"order" => order_params}) do
-    case Orders.create_order(conn.assigns.current_scope, order_params) do
+    scope = conn.assigns.current_scope
+
+    case Orders.create_order(scope, order_params) do
       {:ok, order} ->
         conn
         |> put_flash(:info, "Order created successfully.")
         |> redirect(to: ~p"/orders/#{order}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :new, changeset: changeset)
+        customers = Customers.list_customers(scope)
+
+        render(conn, :new,
+          changeset: changeset,
+          customers: customers
+        )
     end
   end
 
@@ -38,9 +45,11 @@ defmodule OrderManagementSystemWeb.OrderController do
   end
 
   def edit(conn, %{"id" => id}) do
-    order = Orders.get_order!(id, conn.assigns.current_scope)
-    changeset = Orders.change_order(conn.assigns.current_scope, order)
-    customers = Customers.list_customers(conn.assigns.current_scope)
+    scope = conn.assigns.current_scope
+
+    order = Orders.get_order!(scope, id)
+    changeset = Orders.change_order(scope, order)
+    customers = Customers.list_customers(scope)
 
     render(conn, :edit,
       order: order,
@@ -50,16 +59,24 @@ defmodule OrderManagementSystemWeb.OrderController do
   end
 
   def update(conn, %{"id" => id, "order" => order_params}) do
-    order = Orders.get_order!(conn.assigns.current_scope, id)
+    scope = conn.assigns.current_scope
 
-    case Orders.update_order(conn.assigns.current_scope, order, order_params) do
+    order = Orders.get_order!(scope, id)
+
+    case Orders.update_order(scope, order, order_params) do
       {:ok, order} ->
         conn
         |> put_flash(:info, "Order updated successfully.")
         |> redirect(to: ~p"/orders/#{order}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, order: order, changeset: changeset)
+        customers = Customers.list_customers(scope)
+
+        render(conn, :edit,
+          order: order,
+          changeset: changeset,
+          customers: customers
+        )
     end
   end
 

@@ -90,7 +90,11 @@ defmodule OrderManagementSystem.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["compile", "tailwind order_management_system", "esbuild order_management_system"],
+      "assets.build": [
+        "compile",
+        "tailwind order_management_system",
+        "esbuild order_management_system"
+      ],
       "assets.deploy": [
         "tailwind order_management_system --minify",
         "esbuild order_management_system --minify",

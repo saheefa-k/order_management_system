@@ -25,7 +25,10 @@ defmodule OrderManagementSystem.CustomersTest do
       customer = customer_fixture(scope)
       other_scope = user_scope_fixture()
       assert Customers.get_customer!(scope, customer.id) == customer
-      assert_raise Ecto.NoResultsError, fn -> Customers.get_customer!(other_scope, customer.id) end
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Customers.get_customer!(other_scope, customer.id)
+      end
     end
 
     test "create_customer/2 with valid data creates a customer" do
@@ -47,9 +50,16 @@ defmodule OrderManagementSystem.CustomersTest do
     test "update_customer/3 with valid data updates the customer" do
       scope = user_scope_fixture()
       customer = customer_fixture(scope)
-      update_attrs = %{name: "some updated name", email: "some updated email", phone: "some updated phone"}
 
-      assert {:ok, %Customer{} = customer} = Customers.update_customer(scope, customer, update_attrs)
+      update_attrs = %{
+        name: "some updated name",
+        email: "some updated email",
+        phone: "some updated phone"
+      }
+
+      assert {:ok, %Customer{} = customer} =
+               Customers.update_customer(scope, customer, update_attrs)
+
       assert customer.name == "some updated name"
       assert customer.email == "some updated email"
       assert customer.phone == "some updated phone"
@@ -68,7 +78,10 @@ defmodule OrderManagementSystem.CustomersTest do
     test "update_customer/3 with invalid data returns error changeset" do
       scope = user_scope_fixture()
       customer = customer_fixture(scope)
-      assert {:error, %Ecto.Changeset{}} = Customers.update_customer(scope, customer, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Customers.update_customer(scope, customer, @invalid_attrs)
+
       assert customer == Customers.get_customer!(scope, customer.id)
     end
 

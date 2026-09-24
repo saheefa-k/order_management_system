@@ -147,8 +147,7 @@ defmodule OrderManagementSystemWeb.CoreComponents do
   attr :class, :any, default: nil, doc: "the input class to use over defaults"
   attr :error_class, :any, default: nil, doc: "the input error class to use over defaults"
 
-  attr :rest, :global,
-    include: ~w(
+  attr :rest, :global, include: ~w(
       accept
       autocomplete
       capture
@@ -363,8 +362,7 @@ defmodule OrderManagementSystemWeb.CoreComponents do
   attr :row_id, :any, default: nil
   attr :row_click, :any, default: nil
 
-  attr :row_item, :any,
-    default: &Function.identity/1
+  attr :row_item, :any, default: &Function.identity/1
 
   slot :col, required: true do
     attr :label, :string
@@ -468,8 +466,7 @@ defmodule OrderManagementSystemWeb.CoreComponents do
       to: selector,
       time: 200,
       transition:
-        {"transition-all ease-in duration-200",
-         "opacity-100 translate-y-0 sm:scale-100",
+        {"transition-all ease-in duration-200", "opacity-100 translate-y-0 sm:scale-100",
          "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"}
     )
   end

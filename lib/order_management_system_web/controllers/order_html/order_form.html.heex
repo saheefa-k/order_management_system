@@ -1,16 +1,15 @@
 <.form :let={f} for={@changeset} action={@action} class="space-y-4">
-
   <div>
-    <.input 
-      field={f[:customer_id]} 
-      type="select" 
-      label="Customer" 
-      options={
-        [{"Select a customer", ""} | 
-          Enum.map(@customers, fn customer -> 
-            {"#{customer.name} - #{customer.email}", customer.id} 
-          end)]
-      } 
+    <.input
+      field={f[:customer_id]}
+      type="select"
+      label="Customer"
+      options={[
+        {"Select a customer", ""}
+        | Enum.map(@customers, fn customer ->
+            {"#{customer.name} - #{customer.email}", customer.id}
+          end)
+      ]}
       class="w-full rounded-lg border border-gray-300 bg-white 
       text-gray-900 shadow-sm focus:border-gray-500 focus:ring-1 focus:ring-gray-500"
     />
@@ -20,13 +19,12 @@
     </p>
   </div>
 
-
   <div>
-    <.input 
-      field={f[:items]} 
-      type="textarea" 
-      label="Order Items" 
-      placeholder="Example: Laptop, Mouse, Keyboard" 
+    <.input
+      field={f[:items]}
+      type="textarea"
+      label="Order Items"
+      placeholder="Example: Laptop, Mouse, Keyboard"
       class="min-h-24 w-full rounded-lg border border-gray-300 bg-white 
       text-gray-900 shadow-sm focus:border-gray-500 focus:ring-1 focus:ring-gray-500"
     />
@@ -36,38 +34,31 @@
     </p>
   </div>
 
-
   <div>
-    <.input 
-      field={f[:status]} 
-      type="select" 
-      label="Order Status" 
+    <.input
+      field={f[:status]}
+      type="select"
+      label="Order Status"
       options={[
-        {"Pending", "pending"}, 
-        {"Completed", "completed"}, 
-        {"Cancelled", "cancelled"} 
-      ]} 
+        {"Pending", "pending"},
+        {"Completed", "completed"},
+        {"Cancelled", "cancelled"}
+      ]}
       class="w-full rounded-lg border border-gray-300 bg-white 
       text-gray-900 shadow-sm focus:border-gray-500 focus:ring-1 focus:ring-gray-500"
     />
   </div>
 
-
   <div class="flex justify-end gap-3 border-t border-gray-200 pt-4">
-
-    <.link 
-      navigate={@return_to || ~p"/orders"}  
+    <.link
+      navigate={@return_to || ~p"/orders"}
       class="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50"
     >
       Cancel
     </.link>
 
-    <.button 
-      class="rounded-lg bg-gray-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-black"
-    >
+    <.button class="rounded-lg bg-gray-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-black">
       Save Order
     </.button>
-
   </div>
-
 </.form>

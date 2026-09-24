@@ -4,7 +4,11 @@ defmodule OrderManagementSystemWeb.CustomerControllerTest do
   import OrderManagementSystem.CustomersFixtures
 
   @create_attrs %{name: "some name", email: "some email", phone: "some phone"}
-  @update_attrs %{name: "some updated name", email: "some updated email", phone: "some updated phone"}
+  @update_attrs %{
+    name: "some updated name",
+    email: "some updated email",
+    phone: "some updated phone"
+  }
   @invalid_attrs %{name: nil, email: nil, phone: nil}
 
   setup :register_and_log_in_user

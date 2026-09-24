@@ -1,6 +1,5 @@
 <div class="min-h-screen bg-white-100 py-6">
   <div class="mx-auto max-w-2xl px-6">
-
     <div class="mb-6">
       <.link navigate={~p"/orders"} class="text-sm font-medium text-white-600 hover:text-black">
         ← Back to Orders
@@ -9,11 +8,10 @@
 
     <div class="rounded-2xl bg-white p-8 shadow-lg">
       <div class="mb-8 border-b border-gray-200 pb-6">
-        <h1 class="text-3xl font-bold text-gray-900"> Create Order</h1>
-        <p class="mt-2 text-sm text-gray-500"> Add a new customer order to the system</p>
+        <h1 class="text-3xl font-bold text-gray-900">Create Order</h1>
+        <p class="mt-2 text-sm text-gray-500">Add a new customer order to the system</p>
       </div>
-      <.order_form changeset={@changeset} action={~p"/orders"} customers={@customers}/>
-
+      <.order_form changeset={@changeset} action={~p"/orders"} customers={@customers} />
     </div>
   </div>
 </div>

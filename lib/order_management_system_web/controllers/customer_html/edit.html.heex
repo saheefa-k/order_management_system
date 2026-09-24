@@ -1,7 +1,22 @@
 <Layouts.app flash={@flash} current_scope={@current_scope}>
-  <.header>
-    Edit Customer {@customer.id}
-  </.header>
+  <div class="max-w-2xl mx-auto bg-white border border-black rounded-lg p-6 -mt-8 text-black">
+    <div class="text-center mb-5">
+      <h1 class="text-2xl font-bold">
+        Edit Customer {@customer.id}
+      </h1>
+    </div>
 
-  <.customer_form changeset={@changeset} action={~p"/customers/#{@customer}"} return_to={~p"/customers"} />
+    <.customer_form
+      changeset={@changeset}
+      action={~p"/customers/#{@customer}"}
+      return_to={~p"/customers"}
+    />
+
+    <div class="flex justify-center mt-5">
+      <.link
+        navigate={~p"/customers"}
+        class="px-4 py-2 border border-black bg-white text-black rounded hover:bg-gray-100"
+      > ← Back to Customers</.link>
+    </div>
+  </div>
 </Layouts.app>

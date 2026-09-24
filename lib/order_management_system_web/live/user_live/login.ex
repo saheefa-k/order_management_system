@@ -129,6 +129,7 @@ defmodule OrderManagementSystemWeb.UserLive.Login do
   end
 
   defp local_mail_adapter? do
-    Application.get_env(:order_management_system, OrderManagementSystem.Mailer)[:adapter] == Swoosh.Adapters.Local
+    Application.get_env(:order_management_system, OrderManagementSystem.Mailer)[:adapter] ==
+      Swoosh.Adapters.Local
   end
 end

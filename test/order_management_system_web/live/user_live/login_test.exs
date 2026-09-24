@@ -27,7 +27,9 @@ defmodule OrderManagementSystemWeb.UserLive.LoginTest do
 
       assert html =~ "If your email is in our system"
 
-      assert OrderManagementSystem.Repo.get_by!(OrderManagementSystem.Accounts.UserToken, user_id: user.id).context ==
+      assert OrderManagementSystem.Repo.get_by!(OrderManagementSystem.Accounts.UserToken,
+               user_id: user.id
+             ).context ==
                "login"
     end
 

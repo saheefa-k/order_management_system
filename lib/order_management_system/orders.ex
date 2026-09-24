@@ -41,7 +41,10 @@ defmodule OrderManagementSystem.Orders do
 
   """
   def list_orders(%Scope{} = scope) do
-    Repo.all_by(Order, user_id: scope.user.id)
+    Order
+    |> where(user_id: ^scope.user.id)
+    |> preload(:customer)
+    |> Repo.all()
   end
 
   @doc """
@@ -59,7 +62,10 @@ defmodule OrderManagementSystem.Orders do
 
   """
   def get_order!(%Scope{} = scope, id) do
-    Repo.get_by!(Order, id: id, user_id: scope.user.id)
+    Order
+    |> where(id: ^id, user_id: ^scope.user.id)
+    |> preload(:customer)
+    |> Repo.one!()
   end
 
   @doc """

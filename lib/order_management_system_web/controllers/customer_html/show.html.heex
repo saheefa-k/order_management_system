@@ -1,19 +1,41 @@
-<Layouts.app flash={@flash} current_scope={@current_scope}>
-  <.header>
-    Customer {@customer.id}
-    <:actions>
-      <.button navigate={~p"/customers"}>
-        <.icon name="hero-arrow-left" />
-      </.button>
-      <.button variant="primary" navigate={~p"/customers/#{@customer}/edit?return_to=show"}>
-        <.icon name="hero-pencil-square" /> Edit customer
-      </.button>
-    </:actions>
-  </.header>
+<div class="max-w-2xl mx-auto py-6 text-white">
+  <div class="mb-4 text-center">
+    <h1 class="text-2xl font-bold">Customer Details</h1>
+  </div>
 
-  <.list>
-    <:item title="Name">{@customer.name}</:item>
-    <:item title="Email">{@customer.email}</:item>
-    <:item title="Phone">{@customer.phone}</:item>
-  </.list>
-</Layouts.app>
+  <div class="border border-black bg-white rounded-lg p-6">
+    <div class="space-y-4">
+      <div class="border border-black rounded p-3">
+        <p class="text-sm font-bold text-black">Customer ID</p>
+        <p class="text-lg text-black">{@customer.id}</p>
+      </div>
+
+      <div class="border border-black rounded p-3">
+        <p class="text-sm font-bold text-black">Name</p>
+        <p class="text-lg text-black">{@customer.name}</p>
+      </div>
+
+      <div class="border border-black rounded p-3">
+        <p class="text-sm font-bold text-black">Email</p>
+        <p class="text-lg text-black">{@customer.email}</p>
+      </div>
+
+      <div class="border border-black rounded p-3">
+        <p class="text-sm font-bold text-black">Phone</p>
+        <p class="text-lg text-black">{@customer.phone}</p>
+      </div>
+    </div>
+
+    <div class="flex justify-center gap-3 mt-6">
+      <.link
+        navigate={~p"/customers/#{@customer}/edit"}
+        class="rounded-md bg-yellow-600 px-3 py-2 text-sm font-medium text-white hover:bg-yellow-700"
+      >Edit</.link>
+
+      <.link
+        navigate={~p"/customers"}
+        class="px-4 py-2 border border-black bg-white text-black font-medium rounded hover:bg-gray-100"
+      >← Back to Customers</.link>
+    </div>
+  </div>
+</div>

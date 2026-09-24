@@ -2,11 +2,15 @@ defmodule OrderManagementSystem.Customers.Customer do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias OrderManagementSystem.Orders.Order
+
   schema "customers" do
     field :name, :string
     field :email, :string
     field :phone, :string
     field :user_id, :id
+
+    has_many :orders, Order
 
     timestamps(type: :utc_datetime)
   end

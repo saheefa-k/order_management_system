@@ -1,6 +1,5 @@
 <div class="min-h-screen bg-white-100 py-12">
   <div class="mx-auto max-w-2xl px-6">
-
     <div class="mb-6">
       <.link
         navigate={~p"/orders/#{@order}"}
@@ -11,13 +10,11 @@
     </div>
 
     <div class="rounded-2xl bg-white p-8 shadow-lg">
-
       <div class="mb-8 border-b border-gray-200 pb-6">
-      <h1 class="text-3xl font-bold text-gray-900">Edit Order</h1>
-      <p class="mt-2 text-sm text-gray-500"> Update the information for Order #<%= @order.id %></p>
+        <h1 class="text-3xl font-bold text-gray-900">Edit Order</h1>
+        <p class="mt-2 text-sm text-gray-500">Update the information for Order #{@order.id}</p>
       </div>
-      <.order_form changeset={@changeset} action={~p"/orders/#{@order}"} customers={@customers}/>
-
+      <.order_form changeset={@changeset} action={~p"/orders/#{@order}"} customers={@customers} />
     </div>
   </div>
 </div>
