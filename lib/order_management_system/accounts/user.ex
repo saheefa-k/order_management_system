@@ -29,6 +29,16 @@ defmodule OrderManagementSystem.Accounts.User do
     |> validate_email(opts)
   end
 
+  @doc """
+  A changeset for registering a new user with email and password.
+  """
+  def registration_changeset(user, attrs, opts \\ []) do
+    user
+    |> email_changeset(attrs, opts)
+    |> password_changeset(attrs)
+    |> put_change(:confirmed_at, DateTime.utc_now(:second))
+  end
+
   defp validate_email(changeset, opts) do
     changeset =
       changeset

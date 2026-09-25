@@ -3,7 +3,7 @@ defmodule OrderManagementSystem.Orders.Order do
   import Ecto.Changeset
 
   alias OrderManagementSystem.Customers.Customer
-  
+
   schema "orders" do
     field :items, :string
     field :status, :string

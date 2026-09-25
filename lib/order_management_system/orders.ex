@@ -47,6 +47,13 @@ defmodule OrderManagementSystem.Orders do
     |> Repo.all()
   end
 
+  def list_orders_by_status(%Scope{} = scope, status) do
+    Order
+    |> where(user_id: ^scope.user.id, status: ^status)
+    |> preload(:customer)
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single order.
 
@@ -151,5 +158,34 @@ defmodule OrderManagementSystem.Orders do
     else
       raise Ecto.NoResultsError, queryable: Order
     end
+  end
+
+  @doc """
+  Returns order statistics for the dashboard.
+  """
+  def dashboard_stats(%Scope{} = scope) do
+    orders =
+      Order
+      |> where(user_id: ^scope.user.id)
+      |> Repo.all()
+
+    %{
+      total: length(orders),
+      completed: Enum.count(orders, fn order -> order.status == "completed" end),
+      pending: Enum.count(orders, fn order -> order.status == "pending" end),
+      cancelled: Enum.count(orders, fn order -> order.status == "cancelled" end)
+    }
+  end
+
+  @doc """
+  Returns the most recent orders for the dashboard.
+  """
+  def recent_orders(%Scope{} = scope, limit \\ 5) do
+    Order
+    |> where(user_id: ^scope.user.id)
+    |> order_by([order], desc: order.inserted_at)
+    |> limit(^limit)
+    |> preload(:customer)
+    |> Repo.all()
   end
 end

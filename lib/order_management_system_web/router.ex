@@ -18,7 +18,7 @@ defmodule OrderManagementSystemWeb.Router do
   end
 
   scope "/", OrderManagementSystemWeb do
-    pipe_through :browser
+    pipe_through [:browser, :require_authenticated_user]
 
     get "/", PageController, :home
     resources "/customers", CustomerController

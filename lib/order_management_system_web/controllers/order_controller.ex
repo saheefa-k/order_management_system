@@ -5,8 +5,24 @@ defmodule OrderManagementSystemWeb.OrderController do
   alias OrderManagementSystem.Orders.Order
   alias OrderManagementSystem.Customers
 
-  def index(conn, _params) do
-    orders = Orders.list_orders(conn.assigns.current_scope)
+  def index(conn, params) do
+    scope = conn.assigns.current_scope
+
+    orders =
+      case params["status"] do
+        "completed" ->
+          Orders.list_orders_by_status(scope, "completed")
+
+        "pending" ->
+          Orders.list_orders_by_status(scope, "pending")
+
+        "cancelled" ->
+          Orders.list_orders_by_status(scope, "cancelled")
+
+        _ ->
+          Orders.list_orders(scope)
+      end
+
     render(conn, :index, orders: orders)
   end
 

@@ -1,95 +1,89 @@
 defmodule OrderManagementSystemWeb.UserLive.Login do
   use OrderManagementSystemWeb, :live_view
 
-  alias OrderManagementSystem.Accounts
-
   @impl true
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash} current_scope={@current_scope}>
-      <div class="mx-auto max-w-sm space-y-4">
-        <div class="text-center">
-          <.header>
-            <p>Log in</p>
-            <:subtitle>
-              <%= if @current_scope do %>
-                You need to reauthenticate to perform sensitive actions on your account.
-              <% else %>
-                Don't have an account? <.link
-                  navigate={~p"/users/register"}
-                  class="font-semibold text-brand hover:underline"
-                  phx-no-format
-                >Sign up</.link> for an account now.
-              <% end %>
-            </:subtitle>
-          </.header>
-        </div>
+      <div class="min-h-[calc(100vh-4rem)] bg-gray-100 px-4 py-10">
+        <div class="mx-auto max-w-md">
+          <div class="mb-6 text-center">
+            <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">
+              Order Management System
+            </h1>
 
-        <div :if={local_mail_adapter?()} class="alert alert-info">
-          <.icon name="hero-information-circle" class="size-6 shrink-0" />
-          <div>
-            <p>You are running the local mail adapter.</p>
-            <p>
-              To see sent emails, visit <.link href="/dev/mailbox" class="underline">the mailbox page</.link>.
+            <p class="mt-2 text-sm text-gray-600">
+              Welcome back. Log in to manage your orders.
             </p>
           </div>
+
+          <div class="rounded-2xl border-2 border-black bg-white p-7 shadow-lg">
+            <div class="mb-6">
+              <h2 class="text-2xl font-bold text-gray-900">
+                Welcome Back
+              </h2>
+
+              <p class="mt-1 text-sm text-gray-600">
+                Log in to your account.
+              </p>
+            </div>
+
+            <.form
+              :let={f}
+              for={@form}
+              id="login_form"
+              action={~p"/users/log-in"}
+              phx-submit="submit_password"
+              phx-trigger-action={@trigger_submit}
+              class="space-y-5"
+            >
+              <.input
+                readonly={!!@current_scope}
+                field={f[:email]}
+                type="email"
+                label="Email"
+                autocomplete="username"
+                spellcheck="false"
+                required
+                phx-mounted={JS.focus()}
+                class="w-full rounded-lg border border-gray-300 bg-white text-gray-900"
+              />
+
+              <.input
+                field={f[:password]}
+                type="password"
+                label="Password"
+                autocomplete="current-password"
+                spellcheck="false"
+                required
+                class="w-full rounded-lg border border-gray-300 bg-white text-gray-900"
+              />
+
+              <label class="flex items-center gap-2 text-sm text-gray-700">
+                <input
+                  type="checkbox"
+                  name={f[:remember_me].name}
+                  value="true"
+                  class="h-4 w-4 rounded border-gray-400"
+                /> Remember me
+              </label>
+
+              <.button class="w-full rounded-lg border-2 border-black bg-black px-5 py-3 text-sm font-semibold text-white hover:bg-gray-800">
+                Log In
+              </.button>
+            </.form>
+
+            <div class="mt-6 border-t border-gray-200 pt-5 text-center text-sm text-gray-600">
+              Don't have an account?
+              <.link
+                navigate={~p"/users/register"}
+                class="font-semibold text-black hover:underline"
+              >
+                Create an account
+              </.link>
+            </div>
+          </div>
         </div>
-
-        <.form
-          :let={f}
-          for={@form}
-          id="login_form_magic"
-          action={~p"/users/log-in"}
-          phx-submit="submit_magic"
-        >
-          <.input
-            readonly={!!@current_scope}
-            field={f[:email]}
-            type="email"
-            label="Email"
-            autocomplete="username"
-            spellcheck="false"
-            required
-            phx-mounted={JS.focus()}
-          />
-          <.button class="btn btn-primary w-full">
-            Log in with email <span aria-hidden="true">→</span>
-          </.button>
-        </.form>
-
-        <div class="divider">or</div>
-
-        <.form
-          :let={f}
-          for={@form}
-          id="login_form_password"
-          action={~p"/users/log-in"}
-          phx-submit="submit_password"
-          phx-trigger-action={@trigger_submit}
-        >
-          <.input
-            readonly={!!@current_scope}
-            field={f[:email]}
-            type="email"
-            label="Email"
-            autocomplete="username"
-            spellcheck="false"
-            required
-          />
-          <.input
-            field={@form[:password]}
-            type="password"
-            label="Password"
-            autocomplete="current-password"
-            spellcheck="false"
-          />
-          <.button class="btn btn-primary w-full" name={@form[:remember_me].name} value="true">
-            Log in and stay logged in <span aria-hidden="true">→</span>
-          </.button>
-          <.button class="btn btn-primary btn-soft w-full mt-2">
-            Log in only this time
-          </.button>
-        </.form>
       </div>
     </Layouts.app>
     """
@@ -99,9 +93,21 @@ defmodule OrderManagementSystemWeb.UserLive.Login do
   def mount(_params, _session, socket) do
     email =
       Phoenix.Flash.get(socket.assigns.flash, :email) ||
-        get_in(socket.assigns, [:current_scope, Access.key(:user), Access.key(:email)])
+        get_in(socket.assigns, [
+          :current_scope,
+          Access.key(:user),
+          Access.key(:email)
+        ])
 
-    form = to_form(%{"email" => email}, as: "user")
+    form =
+      to_form(
+        %{
+          "email" => email,
+          "password" => "",
+          "remember_me" => false
+        },
+        as: "user"
+      )
 
     {:ok, assign(socket, form: form, trigger_submit: false)}
   end
@@ -109,27 +115,5 @@ defmodule OrderManagementSystemWeb.UserLive.Login do
   @impl true
   def handle_event("submit_password", _params, socket) do
     {:noreply, assign(socket, :trigger_submit, true)}
-  end
-
-  def handle_event("submit_magic", %{"user" => %{"email" => email}}, socket) do
-    if user = Accounts.get_user_by_email(email) do
-      Accounts.deliver_login_instructions(
-        user,
-        &url(~p"/users/log-in/#{&1}")
-      )
-    end
-
-    info =
-      "If your email is in our system, you will receive instructions for logging in shortly."
-
-    {:noreply,
-     socket
-     |> put_flash(:info, info)
-     |> push_navigate(to: ~p"/users/log-in")}
-  end
-
-  defp local_mail_adapter? do
-    Application.get_env(:order_management_system, OrderManagementSystem.Mailer)[:adapter] ==
-      Swoosh.Adapters.Local
   end
 end

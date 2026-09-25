@@ -6,6 +6,7 @@ defmodule OrderManagementSystemWeb.CustomerController do
 
   def index(conn, _params) do
     customers = Customers.list_customers(conn.assigns.current_scope)
+
     render(conn, :index, customers: customers)
   end
 

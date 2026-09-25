@@ -8,35 +8,88 @@ defmodule OrderManagementSystemWeb.UserLive.Registration do
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash} current_scope={@current_scope}>
-      <div class="mx-auto max-w-sm">
-        <div class="text-center">
-          <.header>
-            Register for an account
-            <:subtitle>
-              Already registered?
-              <.link navigate={~p"/users/log-in"} class="font-semibold text-brand hover:underline">
+      <div class="min-h-[calc(100vh-4rem)] bg-gray-100 px-4 py-10">
+        <div class="mx-auto max-w-md">
+          <div class="mb-6 text-center">
+            <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">
+              Order Management System
+            </h1>
+
+            <p class="mt-2 text-sm text-gray-600">
+              Create your account to manage your orders.
+            </p>
+          </div>
+
+          <div class="rounded-2xl border-2 border-black bg-white p-7 shadow-lg">
+            <div class="mb-6">
+              <h2 class="text-2xl font-bold text-gray-900">
+                Create Account
+              </h2>
+
+              <p class="mt-1 text-sm text-gray-600">
+                Enter your details to get started.
+              </p>
+            </div>
+
+            <.form
+              for={@form}
+              id="registration_form"
+              phx-submit="save"
+              phx-change="validate"
+              class="space-y-5"
+            >
+              <.input
+                field={@form[:email]}
+                type="email"
+                label="Email"
+                autocomplete="username"
+                spellcheck="false"
+                required
+                phx-mounted={JS.focus()}
+                class="w-full rounded-lg border border-gray-300 bg-white text-gray-900"
+              />
+
+              <.input
+                field={@form[:password]}
+                type="password"
+                label="Password"
+                autocomplete="new-password"
+                required
+                class="w-full rounded-lg border border-gray-300 bg-white text-gray-900"
+              />
+
+              <.input
+                field={@form[:password_confirmation]}
+                type="password"
+                label="Confirm Password"
+                autocomplete="new-password"
+                required
+                class="w-full rounded-lg border border-gray-300 bg-white text-gray-900"
+              />
+
+              <p class="text-xs text-gray-500">
+                Password must be at least 12 characters.
+              </p>
+
+              <.button
+                phx-disable-with="Creating account..."
+                class="w-full rounded-lg border-2 border-black bg-black px-5 py-3 text-sm font-semibold text-white hover:bg-gray-800"
+              >
+                Create Account
+              </.button>
+            </.form>
+
+            <div class="mt-6 border-t border-gray-200 pt-5 text-center text-sm text-gray-600">
+              Already have an account?
+              <.link
+                navigate={~p"/users/log-in"}
+                class="font-semibold text-black hover:underline"
+              >
                 Log in
               </.link>
-              to your account now.
-            </:subtitle>
-          </.header>
+            </div>
+          </div>
         </div>
-
-        <.form for={@form} id="registration_form" phx-submit="save" phx-change="validate">
-          <.input
-            field={@form[:email]}
-            type="email"
-            label="Email"
-            autocomplete="username"
-            spellcheck="false"
-            required
-            phx-mounted={JS.focus()}
-          />
-
-          <.button phx-disable-with="Creating account..." class="btn btn-primary w-full">
-            Create an account
-          </.button>
-        </.form>
       </div>
     </Layouts.app>
     """
@@ -57,19 +110,10 @@ defmodule OrderManagementSystemWeb.UserLive.Registration do
   @impl true
   def handle_event("save", %{"user" => user_params}, socket) do
     case Accounts.register_user(user_params) do
-      {:ok, user} ->
-        {:ok, _} =
-          Accounts.deliver_login_instructions(
-            user,
-            &url(~p"/users/log-in/#{&1}")
-          )
-
+      {:ok, _user} ->
         {:noreply,
          socket
-         |> put_flash(
-           :info,
-           "An email was sent to #{user.email}, please access it to confirm your account."
-         )
+         |> put_flash(:info, "Account created successfully. You can now log in.")
          |> push_navigate(to: ~p"/users/log-in")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -78,8 +122,12 @@ defmodule OrderManagementSystemWeb.UserLive.Registration do
   end
 
   def handle_event("validate", %{"user" => user_params}, socket) do
-    changeset = Accounts.change_user_email(%User{}, user_params, validate_unique: false)
-    {:noreply, assign_form(socket, Map.put(changeset, :action, :validate))}
+    changeset =
+      %User{}
+      |> User.registration_changeset(user_params, validate_unique: false)
+      |> Map.put(:action, :validate)
+
+    {:noreply, assign_form(socket, changeset)}
   end
 
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do
