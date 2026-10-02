@@ -5,7 +5,7 @@ defmodule OrderManagementSystemWeb.UserLive.Login do
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash} current_scope={@current_scope}>
-      <div class="min-h-[calc(100vh-4rem)] bg-gray-100 px-4 py-10">
+      <div class="[calc(100vh-4rem)] bg-gray-100 px-4 py-10">
         <div class="mx-auto max-w-md">
           <div class="mb-6 text-center">
             <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">
